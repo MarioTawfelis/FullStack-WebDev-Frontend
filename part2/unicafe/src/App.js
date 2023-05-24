@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 const Title = ({ title }) => {
-  console.log(title)
   return (
     <h1>{title}</h1>
   )
@@ -26,6 +25,9 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const total = good + neutral + bad
+  const average = (good - bad)/total
+  const positive = (good/total)*100
 
   return (
     <div>
@@ -40,6 +42,10 @@ const App = () => {
       <Statistics text={"Good"} count={good}/>
       <Statistics text={"Neutral"} count={neutral}/>
       <Statistics text={"Bad"} count={bad}/>
+
+      <Statistics text={"Total Reviews"} count={total}/>
+      <Statistics text={"Aveage"} count={average}/>
+      <Statistics text={"Positive"} count={positive}/>
 
     </div>
   )
