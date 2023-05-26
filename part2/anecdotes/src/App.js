@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEffect } from 'react';
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -21,6 +22,8 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
 
+  const copy = [...votes]
+  
   const handleNextClick = () => {
     const new_number = getRandomInt(0,anecdotes.length)
     setSelected(new_number)
@@ -29,17 +32,35 @@ const App = () => {
   const handleVoteClick = () => {
     const copy = [...votes]
     copy[selected] += 1
-    console.log(copy)
     setVotes(copy)
   }
 
+  const getTopVotedAnecdote = () => {
+    const maxVotes = Math.max(...votes);
+    const topVotedIndex = votes.indexOf(maxVotes);
+    return anecdotes[topVotedIndex];
+  };
+
+  const topVotedAnecdote = getTopVotedAnecdote();
+
+  useEffect(() => {
+    const newTopVotedAnecdote = getTopVotedAnecdote();
+    if (newTopVotedAnecdote !== topVotedAnecdote) {
+      getTopVotedAnecdote(newTopVotedAnecdote);
+    }
+  }, [votes, topVotedAnecdote]);
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button onClick={handleVoteClick}>Vote</button>
       <button onClick={handleNextClick}>Next Anectode</button>
+
+      <h1>Anecdote with most votes</h1>
+      <p>{topVotedAnecdote}</p>
+
     </div>
   )
 }
