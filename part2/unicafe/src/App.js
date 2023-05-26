@@ -12,9 +12,33 @@ const Button = (props) => {
   )
 }
 
-const Statistics = ({ text, count }) => {
+const Statistics = ({ statistics }) => {
+  if(statistics[3] === 0){
+    return <p>No feedback given.</p>
+  }
+
   return (
-    <p>{text} {count}</p>
+    <table>
+        <tbody>
+        <StatisticLine text={"Good"} value={statistics[0]}/>
+        <StatisticLine text={"Neutral"} value={statistics[1]}/>
+        <StatisticLine text={"Bad"} value={statistics[2]}/>
+        <StatisticLine text={"Total"} value={statistics[3]}/>
+        <StatisticLine text={"Average"} value={statistics[4]}/>
+        <StatisticLine text={"Positive"} value={statistics[5]}/>
+      </tbody>
+    </table>
+
+  )
+}
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <tr>
+       <td>{text}</td> 
+       <td>{value}</td>
+    </tr>
+   
   )
 }
 
@@ -29,6 +53,8 @@ const App = () => {
   const average = (good - bad)/total
   const positive = (good/total)*100
 
+  const statistics = [good, neutral, bad, total, average, positive]
+
   return (
     <div>
       <Title title={"Give Feedback"}/>
@@ -39,14 +65,7 @@ const App = () => {
       
       <Title title={"Statistics"}/>
 
-      <Statistics text={"Good"} count={good}/>
-      <Statistics text={"Neutral"} count={neutral}/>
-      <Statistics text={"Bad"} count={bad}/>
-
-      <Statistics text={"Total Reviews"} count={total}/>
-      <Statistics text={"Aveage"} count={average}/>
-      <Statistics text={"Positive"} count={positive}/>
-
+      <Statistics statistics={statistics} />
     </div>
   )
 }
