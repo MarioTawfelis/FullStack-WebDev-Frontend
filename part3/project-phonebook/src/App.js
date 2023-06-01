@@ -21,7 +21,15 @@ const App = () => {
     event.preventDefault();
 
     if (checkDuplicate(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        const person = getPerson(newName)
+        const newObject = { ...person, number: newNumber}
+        personService
+          .update(person.id, newObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+          })
+      }
     } else {
       const nameObject = {
         name: newName,
@@ -30,11 +38,16 @@ const App = () => {
 
       personService.create(nameObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
       });
     }
+    setNewName("");
+    setNewNumber("");
   };
+
+  const getPerson = (name) => {
+    return persons.find(person => 
+      person.name.toLocaleLowerCase() === name.toLocaleLowerCase())
+  }
 
   const checkDuplicate = (name) => {
     return persons.find((person) => person.name === name) ? true : false;
@@ -58,18 +71,14 @@ const App = () => {
     setPersons(filtered_persons);
   };
 
-
   const handleDelete = (id) => {
-    const name = persons.find(p => p.id === id).name
-    if(window.confirm(`Are you sure you want to delete ${name}?`)){
-      personService
-      .deletePerson(id)
-      .then(response => {
-        setPersons(persons.filter(person => person.id !== id))
-      })
+    const name = persons.find((p) => p.id === id).name;
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      personService.deletePerson(id).then((response) => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
     }
-
-  }
+  };
 
   return (
     <div>
@@ -90,8 +99,12 @@ const App = () => {
       <h2>Numbers</h2>
 
       {persons.map((person) => (
-        <Persons key={person.id} name={person.name} number={person.number} 
-          handleDelete={() => handleDelete(person.id)}/>
+        <Persons
+          key={person.id}
+          name={person.name}
+          number={person.number}
+          handleDelete={() => handleDelete(person.id)}
+        />
       ))}
     </div>
   );
