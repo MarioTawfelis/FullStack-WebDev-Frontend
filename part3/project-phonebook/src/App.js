@@ -4,7 +4,7 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 
-import personService from "./services/persons"
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,11 +12,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
 
   useEffect(() => {
-    personService
-      .getAll()
-      .then(initialPersons => {
-        setPersons(initialPersons);
-      })
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+    });
   }, []);
 
   const addPerson = (event) => {
@@ -30,13 +28,11 @@ const App = () => {
         number: newNumber,
       };
 
-      personService
-        .create(nameObject)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson));
-          setNewName("");
-          setNewNumber("");
-        })
+      personService.create(nameObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
@@ -62,6 +58,19 @@ const App = () => {
     setPersons(filtered_persons);
   };
 
+
+  const handleDelete = (id) => {
+    const name = persons.find(p => p.id === id).name
+    if(window.confirm(`Are you sure you want to delete ${name}?`)){
+      personService
+      .deletePerson(id)
+      .then(response => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+    }
+
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -80,7 +89,10 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons persons={persons} />
+      {persons.map((person) => (
+        <Persons key={person.id} name={person.name} number={person.number} 
+          handleDelete={() => handleDelete(person.id)}/>
+      ))}
     </div>
   );
 };

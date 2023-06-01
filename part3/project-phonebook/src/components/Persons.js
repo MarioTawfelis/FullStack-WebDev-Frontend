@@ -1,12 +1,12 @@
-const Persons = ({ persons }) => {
-    return (
-        <div>
-          {persons.map(person =>
-            <p key={person.id}>{person.name} - {person.number}</p>  
-          )}
+const Persons = (props) => {
+  return (
+    <div>
+          <p key={props.id}>
+            {props.name} - {props.number}
+          </p>
+          <button onClick={props.handleDelete}>delete</button>
+    </div>
+  );
+};
 
-      </div>
-    )
-}
-
-export default Persons
+export default Persons;
