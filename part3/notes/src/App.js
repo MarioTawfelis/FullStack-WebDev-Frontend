@@ -2,21 +2,11 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 
 import Note from './components/Note'
+import Notification from './components/Notification'
 import noteService from './services/notes'
 import './index.css'
 
-const Notification = ({ message }) => {
-  if(message === null){
-    return null
-  }
 
-  return (
-    <div className='error'>
-      {message}
-    </div>
-  )
-
-}
 
 const App = (props) => {
   const [notes, setNotes] = useState([])
@@ -38,7 +28,6 @@ const App = (props) => {
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5
-      // id: notes.length + 1,
     }
 
     noteService
@@ -78,7 +67,7 @@ const App = (props) => {
 
   const notesToShow = showAll
     ? notes
-    : notes.filter(note => note.important === true)
+    : notes.filter(note => note.important)
 
   return (
     <div>
