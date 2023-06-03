@@ -3,13 +3,17 @@ import { useState, useEffect } from "react";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 
 import personService from "./services/persons";
+
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -21,14 +25,22 @@ const App = () => {
     event.preventDefault();
 
     if (checkDuplicate(newName)) {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
-        const person = getPerson(newName)
-        const newObject = { ...person, number: newNumber}
-        personService
-          .update(person.id, newObject)
-          .then(returnedPerson => {
-            setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
-          })
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const person = getPerson(newName);
+        const newObject = { ...person, number: newNumber };
+        personService.update(person.id, newObject).then((returnedPerson) => {
+          setPersons(
+            persons.map((p) => (p.id !== person.id ? p : returnedPerson))
+          );
+          setMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        });
       }
     } else {
       const nameObject = {
@@ -38,6 +50,11 @@ const App = () => {
 
       personService.create(nameObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
+
+        setMessage(`Updated ${newName}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
     }
     setNewName("");
@@ -45,9 +62,10 @@ const App = () => {
   };
 
   const getPerson = (name) => {
-    return persons.find(person => 
-      person.name.toLocaleLowerCase() === name.toLocaleLowerCase())
-  }
+    return persons.find(
+      (person) => person.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+    );
+  };
 
   const checkDuplicate = (name) => {
     return persons.find((person) => person.name === name) ? true : false;
@@ -95,6 +113,8 @@ const App = () => {
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
       />
+
+      <Notification message={message} />
 
       <h2>Numbers</h2>
 
