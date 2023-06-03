@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import Note from './components/Note'
 import Notification from './components/Notification'
+import Footer from './components/Footer'
 import noteService from './services/notes'
 import './index.css'
 
@@ -91,6 +92,8 @@ const App = (props) => {
           Save
         </button>
       </form>
+
+      <Footer/>
     </div>
   )
 }
