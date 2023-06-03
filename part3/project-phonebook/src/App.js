@@ -14,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("")
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -32,15 +33,26 @@ const App = () => {
       ) {
         const person = getPerson(newName);
         const newObject = { ...person, number: newNumber };
-        personService.update(person.id, newObject).then((returnedPerson) => {
-          setPersons(
-            persons.map((p) => (p.id !== person.id ? p : returnedPerson))
-          );
-          setMessage(`Added ${newName}`);
-          setTimeout(() => {
-            setMessage(null);
-          }, 5000);
-        });
+        personService
+          .update(person.id, newObject)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : returnedPerson))
+            );
+            setMessage(`Added ${newName}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            setMessageType("success")
+          })
+          .catch(error => {
+            setMessage(`Information of ${newName} has already been removed from the server.`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+            setMessageType("error")
+          })
+
       }
     } else {
       const nameObject = {
@@ -114,7 +126,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
 
-      <Notification message={message} />
+      <Notification message={message} type={messageType}/>
 
       <h2>Numbers</h2>
 
