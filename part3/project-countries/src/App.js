@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import countryService from "./services/countries";
 import CountryForm from "./components/CountryForm";
+import Countries from "./components/Countries";
+import Country from "./components/Country";
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -29,25 +31,9 @@ function App() {
       <CountryForm handleSearch={handleSearch}/>
 
       {filteredCountries.length === 1 ? (
-        <div>
-          <h1>{filteredCountries[0].name.common}</h1>
-          <p>{filteredCountries[0].capital}</p>
-          <p>area {filteredCountries[0].area}</p>
-          <h4>languages:</h4>
-          <ul>
-
-            {Object.entries(filteredCountries[0].languages).map(([key,value]) =>
-              <li key={key}>{value}</li>
-            )}
-          </ul>
-          <p>{filteredCountries[0].flag}</p>
-        </div>
-
+        <Country country={filteredCountries[0]}/>
       ) : (
-        <ul>
-          {filteredCountries.map((country) => <li>{country.name.common}</li> )}
-        </ul>
-        
+        <Countries countries={filteredCountries}/>
       )}
     </div>
   );
