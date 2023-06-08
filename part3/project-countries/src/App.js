@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import countryService from "./services/countries";
+import CountryForm from "./components/CountryForm";
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -25,10 +26,7 @@ function App() {
 
   return (
     <div>
-      <form>
-        <label>find countries </label>
-        <input onChange={handleSearch}></input>
-      </form>
+      <CountryForm handleSearch={handleSearch}/>
 
       {filteredCountries.length === 1 ? (
         <div>
