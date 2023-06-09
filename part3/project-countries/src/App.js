@@ -26,14 +26,14 @@ function App() {
     setFilteredCountries(filteredCountries);
   };
 
-  const handleSelectCountry = (event) => {
+  const handleShowCountry = (event) => {
     const searchQuery = event.target.value.toLowerCase();
 
-    const filteredCountries = countries.find((c) =>
+    const selectedCountry = countries.find((c) =>
       c.name.common.toLowerCase() === searchQuery
     );
 
-    setFilteredCountries(filteredCountries);
+    setFilteredCountries([selectedCountry]);
   }
 
 
@@ -45,7 +45,7 @@ function App() {
       {filteredCountries.length === 1 ? (
         <Country country={filteredCountries[0]}/>
       ) : (
-        <Countries countries={filteredCountries} handleShow={handleSelectCountry}/>
+        <Countries countries={filteredCountries} handleShow={handleShowCountry}/>
       )}
     </div>
   );
