@@ -1,7 +1,6 @@
 import Country from "./Country";
 
 const Countries = ({ countries, handleShow }) => {
-  console.log(countries.length)
   return (
     <div>
       {countries.length === 1 ? (

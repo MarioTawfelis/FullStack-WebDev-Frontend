@@ -1,4 +1,11 @@
+import axios from 'axios'
+import countryService from '../services/countries'
+
 const Country = ({ country }) => {
+    const capitalCity = country.capital
+    
+    const weatherInfo = countryService.getWeatherInfo(capitalCity)
+    
     return (
         
         <div>
