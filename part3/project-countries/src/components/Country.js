@@ -1,10 +1,23 @@
-import axios from 'axios'
+import { useEffect, useState } from 'react'
 import countryService from '../services/countries'
 
+
 const Country = ({ country }) => {
-    const capitalCity = country.capital
+    const [weather, setWeather] = useState([])
     
-    const weatherInfo = countryService.getWeatherInfo(capitalCity)
+    useEffect(() => {
+        const capitalCity = country.capital;
+    
+        countryService.getWeatherInfo(capitalCity)
+          .then((weatherInfo) => {
+            setWeather(weatherInfo);
+          })
+          .catch((error) => {
+            console.error('Error fetching weather info:', error);
+          });
+      }, []);
+
+    
     
     return (
         
@@ -20,6 +33,8 @@ const Country = ({ country }) => {
             )}
             </ul>
             <img src={country.flags.png} alt={country.flags.alt}></img>
+            <h2>Weather in {country.capital}</h2>
+            <p>temperature: {weather.main?.temp} Fahrenheit</p>
         </div>
         
     )

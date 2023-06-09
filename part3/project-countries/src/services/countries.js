@@ -10,9 +10,7 @@ const getAll = () => {
 
 const getWeatherInfo = (capitalCity) => {
     const request = axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${capitalCity}&appid=${API_KEY}`)
-    const weatherInfo = request.then(response => {
-        console.log(response.data)
-    })
+    return request.then(response => response.data)
 }
 
 const exportedObject = {
