@@ -16,16 +16,40 @@ let notes = [
       id: 3,
       content: "GET and POST are the most important methods of HTTP protocol",
       important: true
+    },
+    {
+      id: 4,
+      content: "JavaScript is fun!",
+      important: true
     }
   ]
 
-app.get('/', (response, request) => {
-    response.send("<h1>Hello World!</h1>")
-})
-
-app.get('/api/notes', (response, request) => {
+  app.get('/', (request, response) => {
+    response.send('<h1>Hello World!</h1>')
+  })
+  
+  app.get('/api/notes', (request, response) => {
     response.json(notes)
-})
+  })
 
-const PORT = 3001
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+  app.get('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const note = notes.find(note => note.id === id)
+    if (note) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
+  })
+
+  app.delete('/api/notes/:id' , (request, response) => {
+    const id = Number(request.params.id)
+    const notes = notes.filter(note => note.id !== id)
+
+    response.status(204).end()
+  })
+  
+  const PORT = 3001
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
