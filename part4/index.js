@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+app.use(express.json())
 
 let notes = [
     {
@@ -42,11 +43,22 @@ let notes = [
     }
   })
 
-  app.delete('/api/notes/:id' , (request, response) => {
+  app.delete('/api/notes/:id', (request, response) => {
     const id = Number(request.params.id)
-    const notes = notes.filter(note => note.id !== id)
-
+    notes = notes.filter(note => note.id !== id)
+  
     response.status(204).end()
+  })
+
+  app.post('/api/notes', (request, response) => {
+    const maxId = notes.length > 0 
+      ? Math.max(...notes.map(n => n.id))
+      : 0
+
+    const note = request.body
+    note.id = maxId + 1
+
+    response.json(note)
   })
   
   const PORT = 3001
