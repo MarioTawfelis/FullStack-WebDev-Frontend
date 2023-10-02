@@ -4,7 +4,6 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Notification from "./components/Notification";
-
 import personService from "./services/persons";
 
 import "./index.css";
@@ -14,7 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("")
+  const [messageType, setMessageType] = useState("");
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -39,21 +38,21 @@ const App = () => {
             setPersons(
               persons.map((p) => (p.id !== person.id ? p : returnedPerson))
             );
-            setMessage(`Added ${newName}`);
+            setMessage(`Updated ${newName}`);
             setTimeout(() => {
               setMessage(null);
             }, 5000);
-            setMessageType("success")
+            setMessageType("success");
           })
-          .catch(error => {
-            setMessage(`Information of ${newName} has already been removed from the server.`)
+          .catch((error) => {
+            setMessage(
+              `Information of ${newName} has already been removed from the server.`
+            );
             setTimeout(() => {
-              setMessage(null)
-            }, 5000)
-            setMessageType("error")
-            
-          })
-
+              setMessage(null);
+            }, 5000);
+            setMessageType("error");
+          });
       }
     } else {
       const nameObject = {
@@ -64,11 +63,15 @@ const App = () => {
       personService.create(nameObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
 
-        setMessage(`Updated ${newName}`);
+        setMessage(`Added ${newName}`);
         setTimeout(() => {
           setMessage(null);
         }, 5000);
-      });
+      })
+      .catch(error => {
+        // this is the way to access the error message
+        console.log(error.response.data.error)
+      })
     }
     setNewName("");
     setNewNumber("");
@@ -127,7 +130,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
 
-      <Notification message={message} type={messageType}/>
+      <Notification message={message} type={messageType} />
 
       <h2>Numbers</h2>
 
